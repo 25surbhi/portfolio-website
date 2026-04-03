@@ -46,7 +46,7 @@ function Blog() {
                 </div>
               </div>
             </div>
-            <div
+            <div className="row"
               dangerouslySetInnerHTML={{
                 __html: cleanHtml(blog.blog_gallery),
               }}
