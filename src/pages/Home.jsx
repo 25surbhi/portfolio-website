@@ -1,24 +1,42 @@
-import React from "react";
+import React, { useEffect, useState }  from "react";
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
 function Home() {
+  const  [home, setHome] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost/adminside/api/get-home.php")
+      .then((res) => res.json())
+      .then((data) => {
+        setHome(data);
+      });
+  }, []);
+
+  console.log(home);
+    const cleanHtml = (html) => {
+    return html
+      .replace(/<\/?p[^>]*>/gi, " ")
+      .replace(/<br\s*\/?>/gi, " ")
+      .replace(/&nbsp;/gi, " ")
+      .replace(/\s+/g, " ") // remove extra spaces
+      .trim();
+  };
+  
   return (
     <>
     <Header />
     <main>
-
-      {/* My Story Section */}
-
-      <div className="container">
+      {home.map((home) => (
+        <>
+           <div className="container">
 
         <div className="row justify-content-center align-items-center mb-5">
 
           <div className="col-md-6">
             <img
-             src="/images/node-10.png"
-              alt="Hola!"
+             src={`http://localhost/adminside/uploads/${home.image}`}
+              alt={home.title}
               className="img-fluid"
             />
           </div>
@@ -26,15 +44,11 @@ function Home() {
           <div className="col-md-6">
 
             <div className="story-title">
-              Namste!
+              {home.title}
             </div>
 
             <div className="story-description">
-              Lorem Ipsum is simply dummy text of the
-              printing and typesetting industry.
-              Lorem Ipsum has been the industry's
-              standard dummy text ever since the
-              1500s.
+              {home.description}
             </div>
 
           </div>
@@ -42,7 +56,24 @@ function Home() {
         </div>
 
       </div>
+       <div className="row"
+              dangerouslySetInnerHTML={{
+                __html: cleanHtml(home.home_gallery),
+              }}
+            />
 
+       <div 
+              dangerouslySetInnerHTML={{
+                __html: cleanHtml(home.contact_content),
+              }}
+            />
+        </>
+
+        
+      ))}
+
+
+   
       {/* GRID SECTION */}
 
       <div className="row">
@@ -300,33 +331,8 @@ function Home() {
 
       </div>
 
-      {/* LET'S CONNECT */}
 
-      <div className="container">
-
-        <div className="row">
-
-          <div className="col-md-6">
-
-            <div className="let-conncet">
-
-              <div className="let-conncet-title">
-                Let’s Connect
-              </div>
-
-              <div className="let-conncet-description">
-                Lorem Ipsum is simply dummy text of
-                the printing and typesetting industry.
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
+    
     </main>
     <Footer />
     </>
